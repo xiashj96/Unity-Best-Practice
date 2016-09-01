@@ -30,6 +30,10 @@ public class ColorScript : MonoBehaviour
 }
 ```
 
+```c#
+[HideInInspector] public bool inMainMenu;
+```
+
 [Attribute Refernce](http://docs.unity3d.com/412/Documentation/ScriptReference/20_class_hierarchy.Attributes.html)
 
 ### 2. use properties instead of simple public variables in monobehaviour script 
@@ -125,6 +129,18 @@ A simple and nice implementation here: [Unity3d-Finite-State-Machine](https://gi
 
 ### 15. disable and enable components in a game object to achieve flexible behaviour 
 
+### 16. prefer event to SendMessage()
+
+SendMessage(), BroadcastMessage() and SendMessageUpwards() use reflection and are therefore expensive. More importantly, they can result in ugly code and unexpectable errors.
+
+### 17. use UnityEvent instead of plain C#  event# 
+
+UnityEvent is similar to C# delegate and event, but is also compatible with UI system.
+
+### 18. Prefer GameObject.FindWithTag() to GameObject.Find()
+
+The latter use string matching and is therefore more expensive.
+
 
 
 ## Editor
@@ -133,7 +149,83 @@ A simple and nice implementation here: [Unity3d-Finite-State-Machine](https://gi
 
 
 
-## Project Management
+## Animation
+
+### 1. consider adjusting the curve in key frame animation
+
+### 2. consider using IK(Inverse Kinematics) for Humanoid characters with a avatar 
+
+### 3. precompute hash values for animator parameters
+
+because us string directly in Update() can be computationally expensive
+
+```c#
+using UnityEngine;
+using System.Collections;
+
+public class EthanScript : MonoBehaviour 
+{
+    Animator anim;
+    int jumpHash = Animator.StringToHash("Jump");
+    int runStateHash = Animator.StringToHash("Base Layer.Run");
+
+
+    void Start ()
+    {
+        anim = GetComponent<Animator>();
+    }
+
+
+    void Update ()
+    {
+        float move = Input.GetAxis ("Vertical");
+        anim.SetFloat("Speed", move);
+
+        AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+        if(Input.GetKeyDown(KeyCode.Space) && stateInfo.nameHash == runStateHash)
+        {
+            anim.SetTrigger (jumpHash);
+        }
+    }
+}
+```
+
+### 4. use root motion if you want animation to control the gameobject's position
+
+### 5. use animation events to set up effects that are closely related to animation
+
+e.g: foot step sound in walk/jump animation
+
+## Audio
+
+### 1. use audio mixer snapshot and exposed parameter to control audio in script
+
+
+
+## Physics
+
+### 1. motion must be relative to time
+
+
+
+
+
+## Generic
+
+### 1. break large projects down into smaller, more manageable pieces 
+
+### 2. make prefabs such that it will just work when you drag it into the scene 
+
+### 3. code duplication is a warning sign that you should refactor your code
+
+### 4. code iteratively
+
+Premature optimization is evil!
+
+
+
+
+
 
 
 
