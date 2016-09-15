@@ -51,15 +51,15 @@ using UnityEngine;
 public class MyScriptableObject : ScriptableObject 
 {
 	public int SomeVariable;
-  
+  	
     void OnEnable() {
-  
+  	
 	}
     void OnDisable() {
-  
+  	
 	}
     void OnDestroy() {
-  
+  	
 	}
 }
 ```
@@ -83,7 +83,9 @@ Application:
 
 eg: IDamageable, IInventory
 
-### 7. use coroutine instead of update to do simple animations 
+### 7. use coroutine instead of update to do simple routines 
+
+Also consider Invoke() and InvokeRepeating() .
 
 Actually, consider using a tween library such as DOTween, iTween, etc.
 
@@ -95,7 +97,7 @@ think about events as a "broadcasting" system
 
 参考[C# Style Guide](https://github.com/raywenderlich/c-sharp-style-guide#fields--variables)
 
-关于变量名camelcase的问题，个人偏好public和property用大写Camelcase，private用小写Camelcase。
+关于变量名大小写的问题，个人偏好public和property用小写Camelcase，private用下划线小写Camelcase，因为这样与	Unity本身的命名是一致的。
 
 ### 10. really know what Monobehaviour does
 
@@ -141,7 +143,62 @@ UnityEvent is similar to C# delegate and event, but is also compatible with UI s
 
 The latter use string matching and is therefore more expensive.
 
+### 19. Think in terms of event-driven programming, don't just put everything in Update()
 
+example:
+
+```C#
+public class EnemyObject : MonoBehaviour
+{
+//-------------------------------------------------------
+//C# accessors for private variables
+public int Health
+{
+  get{return _health;}
+  set
+  {
+    //Clamp health between 0-100
+    _health = Mathf.Clamp(value, 0, 100);
+    //Check if dead
+    if(_health <= 0)
+    {
+      OnDead();
+      return;
+    }
+    //Check health and raise event if required
+    if(_health <= 20)
+    {
+      OnHealthLow();
+      return;
+    }
+  }
+}
+//-------------------------------------------------------
+public int Ammo
+{
+  get{return _ammo;}
+  set
+  {
+    //Clamp ammo between 0-50
+    _ammo = Mathf.Clamp(value,0,50);
+      //Check if ammo empty
+    if(_ammo <= 0)
+    {
+      //Call expired event
+      OnAmmoExpired();
+      return;
+    }
+  }
+}
+```
+
+### 20. Remove unused MonoBehaviour methods()
+
+Empty monobehaviour methods will still be called if not removed.
+
+### 21. Make every public fields properties and serialize private fields to make them editable in the inspector. 
+
+This is for the sake of encapsulation.
 
 ## Editor
 
