@@ -200,7 +200,28 @@ Empty monobehaviour methods will still be called if not removed.
 
 This is for the sake of encapsulation.
 
-## Editor
+### 22. Use PlayerPref class to store game settings data to local directory
+
+### 23. Use platform specific compilation to adapt to different platforms
+
+```c#
+	public void Quit()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+```
+
+### 24. Make your script more usable
+
+Tooltip, Space, TextArea, Header, ExecuteinEditMode, ContextMenu, ContextMenuItem, Range, Multiline Attribute
+
+
+
+## Edito
 
 ### 1. use icons to organize your scene
 
